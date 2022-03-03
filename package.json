@@ -1,0 +1,23 @@
+{
+  "name": "samsung-ocean",
+  "version": "1.0.0",
+  "description": "Curso back-end com Node.js e Express",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Walter-Alipio/Samsung-Ocean-Project.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Walter-Alipio/Samsung-Ocean-Project/issues"
+  },
+  "homepage": "https://github.com/Walter-Alipio/Samsung-Ocean-Project#readme",
+  "dependencies": {
+    "express": "^4.17.3"
+  }
+}
