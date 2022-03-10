@@ -1,70 +1,100 @@
 const { response } = require('express');
+const { MongoClient , ObjectId } = require('mongodb'); //inportando o mongodb
 const express = require('express');//importando framwork Express
 const res = require('express/lib/response');
-const app = express();//inicia aplicação express
 
-//sinaliza para o express utilizar JSON no corpo das requisições
-app.use(express.json());
+const url = "mongodb://localhost:27017"; //string de conexão - exclusivo do mongodb
+const dbName = "ocean_bancodados";
 
-//Principal
-app.get('/',  (req, res) => { // get(verbo) '/'(rota AKA: endpoint)  req. requisição client res. resposta do back-end
-    res.send('Hello world');//res.send envia uma resposta
-});
+async function main(){
 
-const herois = ['Mulher Maravilha', 'Capitã Marvel','Homem de Ferro'];
+    // Conexão com bando de dados
+    console.log('Realizando conexão com banco de dados...');
+    const client = await MongoClient.connect(url);//await espera a resposta acontecer
 
+    const db = client.db(dbName);//pegando o banco de dados
 
-//GET - Read All
-app.get('/herois', (req, res) => { 
+    const collection = db.collection("herois");//puxa nossa collection do banco
 
-    const actualHeroes = herois.filter(Boolean);
+    console.log('Conexão com banco de dados realizada com sucesso');
 
-    res.send(actualHeroes);//filter(Boolean) garante que só seram lidos os valores válidos, não null.
-});
-
-//GET - Read Single ID
-app.get('/herois/:id',(req,res)=>{//:id (parâmetro de rota)
-
-    const id = req.params.id-1;//acessa o parametro da rota id
-    const item = herois[id];
-
-    res.send(item);
-});
-
-//POST - Creat
-app.post('/herois', (req, res)=>{
+    const app =  express();//inicia aplicação express
     
-    const item = req.body.nome;//pega apenas o atributo nome:
+    //sinaliza para o express utilizar JSON no corpo das requisições
+    app.use(express.json());
+    
+    //Principal
+    app.get('/',  (req, res) => { // get(verbo) '/'(rota AKA: endpoint)  req. requisição client res. resposta do back-end
+        res.send('Hello world');//res.send envia uma resposta
+    });
+    
+    //GET - Read All
+    app.get('/herois', async (req, res) => { 
 
-    herois.push(item);//add novo heroi na lista
-    res.send('Item adicionado com sucesso!');
-});
+        const documents = await collection.find().toArray();//espera e puxa a resposta como array de documentos 
+    
+        res.send(documents);//envia a lista como resposta para o client
+    });
+    
+    //GET - Read Single ID
+    app.get('/herois/:id', async (req,res)=>{//:id (parâmetro de rota)
+    
+        const id = req.params.id;//acessa o parametro da rota id (string)
+        const item = await collection.findOne({_id: new ObjectId(id)});//faz a busca pela id informada na rota
+    
+        res.send(item);
+    });
+    
+    //POST - Creat
+    app.post('/herois', async (req, res)=>{
+        
+        const item = req.body;//pega o corpo da requisição
 
-//PUT - Update
+        await collection.insertOne(item);//inserindo no banco
+    
+        res.send(item); //envia o item criado como resposta a requisição
+    });
+    
+    //PUT - Update
+    app.put('/herois/:id', async (req,res)=>{
+        //recebemos o id que será atualizado
+        const id = req.params.id;
+    
+        //pegamos o item que foi enviado no corpo da requisição
+        const newItem = req.body;
+    
+        //Atualiza o banco de dados sobrescrevendo o item da lista
+       await collection.updateOne(
+            { _id: ObjectId(id)},
+            {
+                $set: newItem,
+            }
+        );//recebe dois objetos como parâmetro, a localização e a modificação
+    
+        res.send(newItem)
+    });
+    
+    //DELETE
+    app.delete('/herois/:id',async(req,res)=>{//tras o item como parâmetro
+    
+        const id = req.params.id-1;//pega a id passada na requisição
+    
+       // delete herois[id];//deleta do array o heroi da posição id
+       await collection.deleteOne({_id: ObjectId(id)});
+    
+        res.send('Item excluido com sucesso!');
+    })
+    
+     app.listen(3000); 
+}
 
-app.put('/herois/:id',(req,res)=>{
-    //recebemos o id que será atualizado
-    const id = req.params.id-1;
-//fazemos o -1 porque a chamada vem a partir do 1, mas estamoas usando o index da array como id, que começa do 0.
+main();//toda conexão com banco de dados é uma promise e por isso, envolvemos nossa API em uma função async 
 
-    //pegamos o item que foi enviado no corpo da requisição
-    const newItem = req.body.nome;
+ /* Usando o Thunder Cliente
+ -New Request
+ -localhost3000*/
 
-    //Atualiza a lista sobrescrevendo o item da lista
-    herois[id] = newItem;
-
-    res.send('Este item foi atualizado com sucesso!')
-});
-
-//DELETE
-app.delete('/herois/:id',(req,res)=>{//tras o item como parâmetro
-
-    const id = req.params.id-1;//pega a id passada na requisição
-
-    delete herois[id];//deleta do array o heroi da posição id
-
-    res.send('Item excluido com sucesso!');
-
-})
-
- app.listen(3000); 
+ /* usando MongoDB Compass
+ NOSQL - Not Only SQL.
+ -create database + name + colection 
+ -no terminal, npm i mongodb*/
