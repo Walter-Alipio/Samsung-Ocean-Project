@@ -10,6 +10,11 @@ Curso back-end com Node.js e Express
 O curso teve como objetivo criar uma API REST que armazena as informações em um array, mas que futuramente, será ligada a um banco de dados. 
 
 Possuí as principais operações de CRUD.
+-GET read All
+-GET read only
+-POST creat
+-PUT update
+-DELET
 
 *Seguda parte*
 
