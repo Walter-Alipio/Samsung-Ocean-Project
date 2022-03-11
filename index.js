@@ -3,18 +3,18 @@ const { MongoClient , ObjectId } = require('mongodb'); //inportando o mongodb
 const express = require('express');//importando framwork Express
 const res = require('express/lib/response');
 
-const url = "mongodb://localhost:27017"; //string de conexão - exclusivo do mongodb
+const url = "mongodb+srv://Walter:mGaC9GKv1WQWGdkX@cluster0.mg9ym.mongodb.net/"; //string de conexão - exclusivo do mongodb
 const dbName = "ocean_bancodados";
 
 async function main(){
 
     // Conexão com bando de dados
     console.log('Realizando conexão com banco de dados...');
-   // const client = await MongoClient.connect(url);//await espera a resposta acontecer
+    const client = await MongoClient.connect(url);//await espera a resposta acontecer
 
-   // const db = client.db(dbName);//pegando o banco de dados
+    const db = client.db(dbName);//pegando o banco de dados
 
-    //const collection = db.collection("herois");//puxa nossa collection do banco
+    const collection = db.collection("herois");//puxa nossa collection do banco
 
     console.log('Conexão com banco de dados realizada com sucesso');
 
