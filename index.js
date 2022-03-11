@@ -98,3 +98,5 @@ main();//toda conexão com banco de dados é uma promise e por isso, envolvemos 
  NOSQL - Not Only SQL.
  -create database + name + colection 
  -no terminal, npm i mongodb*/
+
+ //estudar modulos https://expressjs.com/pt-br/guide/routing.html
