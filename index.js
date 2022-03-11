@@ -10,11 +10,11 @@ async function main(){
 
     // Conexão com bando de dados
     console.log('Realizando conexão com banco de dados...');
-    const client = await MongoClient.connect(url);//await espera a resposta acontecer
+   // const client = await MongoClient.connect(url);//await espera a resposta acontecer
 
-    const db = client.db(dbName);//pegando o banco de dados
+   // const db = client.db(dbName);//pegando o banco de dados
 
-    const collection = db.collection("herois");//puxa nossa collection do banco
+    //const collection = db.collection("herois");//puxa nossa collection do banco
 
     console.log('Conexão com banco de dados realizada com sucesso');
 
@@ -84,11 +84,12 @@ async function main(){
     
         res.send('Item excluido com sucesso!');
     })
-    
-     app.listen(3000); 
+    //definimos a porta em que a aplicação está rodando no heroku "ou" no localhost
+     app.listen(process.env.PORT || 3000); 
 }
-
 main();//toda conexão com banco de dados é uma promise e por isso, envolvemos nossa API em uma função async 
+
+/* o heroku informa a porta disponivel através do process.env */
 
  /* Usando o Thunder Cliente
  -New Request
