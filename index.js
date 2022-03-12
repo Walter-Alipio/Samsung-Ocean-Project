@@ -1,10 +1,16 @@
+require('dotenv').config()
 const { response } = require('express');
 const { MongoClient , ObjectId } = require('mongodb'); //inportando o mongodb
 const express = require('express');//importando framwork Express
 const res = require('express/lib/response');
 
-const url = "mongodb+srv://Walter:mGaC9GKv1WQWGdkX@cluster0.mg9ym.mongodb.net/"; //string de conexão - exclusivo do mongodb
-const dbName = "ocean_bancodados";
+const dbHost = process.env.DB_HOST;
+const dbPort = process.env.DB_PORT;
+const dbName = process.env.DB_NAME;
+const dbUser = process.env.DB_USER;
+const dbPassword = process.env.DB_PASSWORD;
+
+const url = `mongodb+srv://${dbUser}:${dbPassword}@${dbHost}/`; //string de conexão - exclusivo do mongodb
 
 async function main(){
 
@@ -85,7 +91,7 @@ async function main(){
         res.send('Item excluido com sucesso!');
     })
     //definimos a porta em que a aplicação está rodando no heroku "ou" no localhost
-     app.listen(process.env.PORT || 3000); 
+     app.listen(process.env.PORT || dbPort); 
 }
 main();//toda conexão com banco de dados é uma promise e por isso, envolvemos nossa API em uma função async 
 
