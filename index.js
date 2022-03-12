@@ -4,6 +4,7 @@ const { MongoClient , ObjectId } = require('mongodb'); //inportando o mongodb
 const express = require('express');//importando framwork Express
 const res = require('express/lib/response');
 
+/* incluindo aqui as variaveis de ambiente para esconder os dados relacionados ao BD */
 const dbHost = process.env.DB_HOST;
 const dbPort = process.env.DB_PORT;
 const dbName = process.env.DB_NAME;
